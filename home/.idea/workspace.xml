@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="802bd50f-77dc-4a29-a62f-958f247a10dc" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/home/utils/common.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/home/utils/fastdfs/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/home/utils/fastdfs/client.conf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/home/apps/users/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/home/apps/users/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -62,14 +62,15 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/home/apps/users/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="506">
-              <caret line="111" column="69" selection-start-line="111" selection-start-column="69" selection-end-line="111" selection-end-column="69" />
+            <state relative-caret-position="607">
+              <caret line="116" column="35" selection-start-line="116" selection-start-column="35" selection-end-line="116" selection-end-column="35" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
                 <element signature="e#332#1938#0" />
                 <element signature="e#1966#2353#0" />
                 <element signature="e#2435#2605#0" />
                 <element signature="e#2636#3603#0" />
+                <element signature="e#3502#4794#0" />
               </folding>
             </state>
           </provider>
@@ -121,8 +122,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="240" />
-    <option name="y" value="29" />
+    <option name="x" value="307" />
+    <option name="y" value="28" />
     <option name="width" value="1283" />
     <option name="height" value="881" />
   </component>
@@ -162,6 +163,13 @@
               <item name="home" type="462c0819:PsiDirectoryNode" />
               <item name="home" type="462c0819:PsiDirectoryNode" />
               <item name="utils" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="home" type="b2602c69:ProjectViewProjectNode" />
+              <item name="home" type="462c0819:PsiDirectoryNode" />
+              <item name="home" type="462c0819:PsiDirectoryNode" />
+              <item name="utils" type="462c0819:PsiDirectoryNode" />
+              <item name="fastdfs" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -238,15 +246,15 @@
       <workItem from="1567421881221" duration="15000" />
       <workItem from="1567481540317" duration="407000" />
       <workItem from="1567508112319" duration="335000" />
-      <workItem from="1567597899557" duration="558000" />
+      <workItem from="1567597899557" duration="822000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="3666000" />
+    <option name="totallyTimeSpent" value="3930000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="240" y="29" width="1283" height="881" extended-state="0" />
+    <frame x="307" y="28" width="1283" height="881" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25866237" />
@@ -338,16 +346,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/home/utils/fastdfs/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/home/apps/users/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="506">
-          <caret line="111" column="69" selection-start-line="111" selection-start-column="69" selection-end-line="111" selection-end-column="69" />
+        <state relative-caret-position="607">
+          <caret line="116" column="35" selection-start-line="116" selection-start-column="35" selection-end-line="116" selection-end-column="35" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
             <element signature="e#332#1938#0" />
             <element signature="e#1966#2353#0" />
             <element signature="e#2435#2605#0" />
             <element signature="e#2636#3603#0" />
+            <element signature="e#3502#4794#0" />
           </folding>
         </state>
       </provider>
