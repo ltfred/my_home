@@ -160,3 +160,38 @@ class UserAvatar(LoginRequiredMixin, View):
 
         # 4. 返回上传的结果<avatar_url>
         return http.JsonResponse({'errno': RET.OK, 'errmsg': "OK", 'data': {"avatar_url": url}})
+
+
+class AuthProfile(LoginRequiredMixin, View):
+    """用户实名认证"""
+    def get(self, request):
+        # 1. 取到当前登录用户
+        user = request.user
+
+        # 2. 获取当前用户的认证信息
+        auth_dict = {
+            "real_name": user.real_name,
+            "id_card": user.id_card
+        }
+        # 3. 返回信息
+        return http.JsonResponse({'errno': RET.OK, 'errmsg': "OK", 'data': auth_dict})
+
+    def post(self, request):
+        # 1. 取到当前登录用户
+        user = request.user
+
+        # 2. 取到传过来的认证的信息
+        data_dict = json.loads(request.body.decode())
+        real_name = data_dict.get("real_name")
+        id_card = data_dict.get("id_card")
+
+        # 3. 更新用户的认证信息
+        user.real_name = real_name
+        user.id_card = id_card
+        try:
+            user.save()
+        except Exception as e:
+            return http.JsonResponse({'errno': RET.DBERR, 'errmsg': "保存数据失败"})
+
+        # 4. 返回结果
+        return http.JsonResponse({'errno': RET.OK, 'errmsg': "OK"})
