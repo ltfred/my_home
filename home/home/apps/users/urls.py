@@ -15,5 +15,7 @@ urlpatterns = [
     url(r'^api/v1.0/user/avatar/$', views.UserAvatar.as_view(), name='avatar'),
     # 用户信息获取/修改
     url(r'^api/v1.0/user/profile/$', views.AuthProfile.as_view(), name='profile'),
+    # 用户房屋发布列表
+    url(r'^api/v1.0/user/houses/$', views.UserHouse.as_view())
 
 ]

@@ -197,3 +197,34 @@ class AuthProfile(LoginRequiredMixin, View):
         return http.JsonResponse({'errno': RET.OK, 'errmsg': "OK"})
 
 
+class UserHouse(LoginRequiredMixin, View):
+    '''用户房屋信息'''
+
+    def get(self, request):
+        """
+        获取用户房屋列表
+        1. 获取当前登录用户
+        2. 查询房屋数据返回数据
+        """
+        user = request.user
+        try:
+            houses = user.house_set.all()
+        except Exception as e:
+            logger.error(e)
+            return http.JsonResponse({'errno': RET.DBERR, 'errmsg': "查询数据失败"})
+
+        houses_dict = []
+        for house in houses:
+            houses_dict.append({
+                "house_id": house.id,
+                "title": house.title,
+                "price": house.price,
+                "area_name": house.area.name,
+                "img_url": house.index_image_url,
+                "room_count": house.room_count,
+                "order_count": house.order_count,
+                "address": house.address,
+                "user_avatar": house.user.avatar_url,
+                "ctime": house.create_time.strftime("%Y-%m-%d")
+            })
+        return http.JsonResponse({'errno': RET.OK, 'errmsg': "OK", 'data': houses_dict})

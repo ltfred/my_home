@@ -19,4 +19,8 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('users.urls', namespace='users')),
+    url(r'^', include('house.urls', namespace='house')),
+    url(r'^', include('order.urls', namespace='order')),
+    url(r'^', include('address.urls', namespace='address')),
+    url(r'^', include('verify.urls', namespace='verify')),
 ]
