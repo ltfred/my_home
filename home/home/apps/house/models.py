@@ -1,5 +1,5 @@
 from django.db import models
-from home.utils.fastdfs.models import BaseModel
+from home.utils.models import BaseModel
 
 
 class House(BaseModel):

@@ -195,3 +195,5 @@ class AuthProfile(LoginRequiredMixin, View):
 
         # 4. 返回结果
         return http.JsonResponse({'errno': RET.OK, 'errmsg': "OK"})
+
+
