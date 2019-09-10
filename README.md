@@ -1,2 +1,2 @@
 ### my_home
-- A Renting House Information Website Base On Django
+- A renting house information website base on Django
