@@ -6,7 +6,7 @@ from django.views import View
 from django_redis import get_redis_connection
 import logging
 from redis import StrictRedis
-from home.utils.common import LoginRequiredMixin
+from home.utils.common import LoginRequiredJSONMixin, VerifyRequiredJSONMixin
 from home.utils.response_code import RET
 from users.models import User
 from fdfs_client.client import Fdfs_client
@@ -74,7 +74,7 @@ class Session(View):
         return http.JsonResponse({'errno': RET.SESSIONERR, 'errmsg': '用户未登录'})
 
 
-class Logout(LoginRequiredMixin, View):
+class Logout(LoginRequiredJSONMixin, View):
     """用户退出"""
 
     def delete(self, request):
@@ -114,7 +114,7 @@ class Login(View):
         return http.JsonResponse({'errno': RET.OK, 'errmsg': "登录成功"})
 
 
-class UserAvatar(LoginRequiredMixin, View):
+class UserAvatar(LoginRequiredJSONMixin, View):
     '''
             {
             "data": {
@@ -162,7 +162,7 @@ class UserAvatar(LoginRequiredMixin, View):
         return http.JsonResponse({'errno': RET.OK, 'errmsg': "OK", 'data': {"avatar_url": url}})
 
 
-class AuthProfile(LoginRequiredMixin, View):
+class AuthProfile(LoginRequiredJSONMixin, View):
     """用户实名认证"""
     def get(self, request):
         # 1. 取到当前登录用户
@@ -197,7 +197,7 @@ class AuthProfile(LoginRequiredMixin, View):
         return http.JsonResponse({'errno': RET.OK, 'errmsg': "OK"})
 
 
-class UserHouse(LoginRequiredMixin, View):
+class UserHouse(LoginRequiredJSONMixin, View):
     '''用户房屋信息'''
 
     def get(self, request):
