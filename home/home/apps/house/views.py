@@ -275,3 +275,4 @@ class HouseDetailView(View):
 
         # 返回
         return http.JsonResponse({'data': data, 'errmsg': 'ok', 'errno': RET.OK})
+
