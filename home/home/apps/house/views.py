@@ -1,6 +1,7 @@
 import json
-
+from fdfs_client.client import Fdfs_client
 from django import http
+from django.conf import settings
 from django.core.cache import cache
 from django.views import View
 from address.models import Area
@@ -40,6 +41,7 @@ class Areas(View):
 
 class NewHouse(VerifyRequiredJSONMixin, View):
     """发布新房源"""
+
     def post(self, request):
         # 获取参数
         json_dict = json.loads(request.body.decode())
@@ -106,3 +108,47 @@ class NewHouse(VerifyRequiredJSONMixin, View):
 
         # 返回
         return http.JsonResponse({'errno': RET.OK, 'errmsg': "Ok", 'data': {"house_id": house.id}})
+
+
+class HouseImage(VerifyRequiredJSONMixin, View):
+    """房屋图片"""
+
+    def post(self, request, house_id):
+        # 获取图片
+        house_image = request.FILES.get('house_image')
+        if not house_image:
+            return http.JsonResponse({'error': RET.PARAMERR, 'errmsg': '参数错误'})
+
+        # 查询房屋
+        try:
+            house = House.objects.get(id=house_id)
+        except Exception as e:
+            logger.error(e)
+            return http.JsonResponse({'error': RET.PARAMERR, 'errmsg': '房屋不存在'})
+
+        # 上传到Fdfs
+
+        try:
+            client = Fdfs_client(settings.FDFS_CLIENT_CONF)
+            result = client.upload_by_buffer(house_image.read())
+        except Exception as e:
+            logger.error(e)
+            return http.JsonResponse({'errno': RET.THIRDERR, 'errmsg': "上传图片错误"})
+
+        # 初始化房屋的图片模型
+        # 上传成功：返回file_id,拼接图片访问URL
+        file_id = result.get('Remote file_id')
+        url = settings.FDFS_URL + file_id
+        try:
+            house_image = HouseImage.objects.create(house=house, url=url)
+        except Exception as e:
+            logger.error(e)
+            return http.JsonResponse({'errno': RET.DBERR, 'errmsg': "保存数据失败"})
+
+        # 判断是否有首页图片
+        if not house.index_image_url:
+            # 保存图片地址
+            house.index_image_url = url
+            house.save()
+
+        return http.JsonResponse({'errno': RET.OK, 'errmsg': "OK", 'data': {"url": url}})
