@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="802bd50f-77dc-4a29-a62f-958f247a10dc" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/home/apps/house/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/home/apps/house/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/home/apps/house/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/home/apps/house/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/home/apps/users/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/home/apps/users/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/home/apps/users/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/home/apps/users/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/home/settings/dev.py" beforeDir="false" afterPath="$PROJECT_DIR$/home/settings/dev.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -35,14 +30,24 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/home/apps/house/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="550">
-              <caret line="174" lean-forward="true" selection-start-line="174" selection-end-line="174" />
+            <state relative-caret-position="629">
+              <caret line="243" column="8" selection-start-line="243" selection-start-column="8" selection-end-line="243" selection-end-column="8" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
                 <element signature="e#467#1191#0" />
                 <element signature="e#1245#3698#0" />
                 <element signature="e#3754#5763#0" />
+                <element signature="e#5845#6829#0" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/home/apps/order/models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="28" selection-start-column="28" selection-end-column="28" />
             </state>
           </provider>
         </entry>
@@ -107,18 +112,6 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/home/views.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="440">
-              <caret line="21" selection-start-line="21" selection-end-line="21" />
-              <folding>
-                <element signature="e#0#34#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/home/static/js/ihome/my.js">
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
@@ -151,16 +144,16 @@
         <option value="$PROJECT_DIR$/home/settings/dev.py" />
         <option value="$PROJECT_DIR$/logs/home.log" />
         <option value="$PROJECT_DIR$/home/apps/users/views.py" />
-        <option value="$PROJECT_DIR$/home/apps/house/views.py" />
         <option value="$PROJECT_DIR$/home/apps/users/urls.py" />
         <option value="$PROJECT_DIR$/home/apps/house/urls.py" />
+        <option value="$PROJECT_DIR$/home/apps/house/views.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="348" />
-    <option name="y" value="25" />
-    <option name="width" value="1283" />
+    <option name="x" value="565" />
+    <option name="y" value="23" />
+    <option name="width" value="1193" />
     <option name="height" value="881" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -194,6 +187,13 @@
               <item name="home" type="462c0819:PsiDirectoryNode" />
               <item name="apps" type="462c0819:PsiDirectoryNode" />
               <item name="house" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="home" type="b2602c69:ProjectViewProjectNode" />
+              <item name="home" type="462c0819:PsiDirectoryNode" />
+              <item name="home" type="462c0819:PsiDirectoryNode" />
+              <item name="apps" type="462c0819:PsiDirectoryNode" />
+              <item name="order" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -280,18 +280,18 @@
       <workItem from="1567754176878" duration="1490000" />
       <workItem from="1568128589823" duration="1576000" />
       <workItem from="1568167293075" duration="2686000" />
-      <workItem from="1568178821827" duration="464000" />
+      <workItem from="1568178821827" duration="2080000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10889000" />
+    <option name="totallyTimeSpent" value="12505000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="348" y="25" width="1283" height="881" extended-state="0" />
+    <frame x="565" y="23" width="1193" height="881" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2788074" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21112077" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -364,13 +364,6 @@
           <folding>
             <element signature="e#0#28#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/home/apps/order/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="28" selection-start-column="28" selection-end-column="28" />
         </state>
       </provider>
     </entry>
@@ -529,15 +522,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/home/apps/order/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="28" selection-start-column="28" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/home/apps/house/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="550">
-          <caret line="174" lean-forward="true" selection-start-line="174" selection-end-line="174" />
+        <state relative-caret-position="629">
+          <caret line="243" column="8" selection-start-line="243" selection-start-column="8" selection-end-line="243" selection-end-column="8" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
             <element signature="e#467#1191#0" />
             <element signature="e#1245#3698#0" />
             <element signature="e#3754#5763#0" />
+            <element signature="e#5845#6829#0" />
           </folding>
         </state>
       </provider>

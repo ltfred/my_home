@@ -172,3 +172,106 @@ class HouseImageView(VerifyRequiredJSONMixin, View):
         return http.JsonResponse({'errno': RET.OK, 'errmsg': "OK", 'data': {"url": url}})
 
 
+class MyHousesView(VerifyRequiredJSONMixin, View):
+    """我的房源"""
+
+    def post(self, request):
+        # 获取当前用户
+        user = request.user
+        # 查询当前用户的所有房屋信息
+        try:
+            houses = House.objects.filter(user=user)
+        except Exception as e:
+            logger.error(e)
+            return http.JsonResponse({'errno': RET.DBERR, 'errmsg': "数据库查询错误"})
+        # 拼接格式
+        data = []
+        for house in houses:
+            data.append({
+                'address': house.address,
+                'area_name': house.area.name,
+                'ctime': house.create_time.strftime('%Y-%m-%d'),
+                'house_id': house.id,
+                'img_url': house.index_image_url,
+                'order_count': house.order_count,
+                'price': house.price,
+                'room_count': house.room_count,
+                'title': house.title,
+                'user_avatar': house.user.avatar_url
+            })
+        # 返回
+        return http.JsonResponse({'errno': RET.OK, 'errmsg': 'ok', 'data': data})
+
+
+class HouseDetailView(View):
+    """房源详情"""
+
+    def get(self, request, house_id):
+        # 查出该房子
+        try:
+            house = House.objects.get(id=house_id)
+        except Exception as e:
+            logger.error(e)
+            return http.JsonResponse({'errno': RET.DBERR, 'errmsg': "数据库查询错误"})
+
+        # 查出该房子的订单信息
+        try:
+            orders = house.order_set.all()
+        except Exception as e:
+            logger.error(e)
+            return http.JsonResponse({'errno': RET.DBERR, 'errmsg': "数据库查询错误"})
+
+        # 获取该房屋的评论
+        comments = []
+        for order in orders:
+            comments.append({
+                "comment": order.comment if order.comment else '',
+                "ctime": order.create_time,
+                "user_name": order.user.username
+            })
+        # 查出该房子的设施
+        try:
+            facility_query_set = house.facilities.all()
+        except Exception as e:
+            logger.error(e)
+            return http.JsonResponse({'errno': RET.DBERR, 'errmsg': "数据库查询错误"})
+
+        facilities = [facility.id for facility in facility_query_set]
+
+        # 查出房子的所有图片
+        try:
+            house_images = house.houseimage_set.all()
+        except Exception as e:
+            logger.error(e)
+            return http.JsonResponse({'errno': RET.DBERR, 'errmsg': "数据库查询错误"})
+
+        img_urls = [house_image.url for house_image in house_images]
+
+        # 拼接格式
+        house_dict = {
+            'acreage': house.acreage,
+            "address": house.address,
+            "beds": house.beds,
+            "capacity": house.capacity,
+            'comments': comments,
+            "deposit": house.deposit,
+            "facilities": facilities,
+            'hid': house.id,
+            'img_urls': img_urls,
+            "max_days": house.max_days,
+            "min_days": house.min_days,
+            "price": house.price,
+            "room_count": house.room_count,
+            "title": house.title,
+            "unit": house.unit,
+            "user_avatar": house.user.avatar_url,
+            "user_id": house.user.id,
+            "user_name": house.user.username
+        }
+
+        # 当前登陆用户的id
+        user_id = request.user.id
+        data = {'house': house_dict, 'user_id': user_id if user_id else -1}
+
+        # 返回
+        return http.JsonResponse({'data': data, 'errmsg': 'ok', 'errno': RET.OK})
