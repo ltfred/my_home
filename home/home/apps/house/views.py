@@ -9,12 +9,12 @@ import logging
 from home.utils.common import VerifyRequiredJSONMixin
 from home.utils.qiniuyun import qiniuyun
 from home.utils.response_code import RET
-from house.models import Facility, House
+from house.models import Facility, House, HouseImage
 
 logger = logging.getLogger('django')
 
 
-class Areas(View):
+class AreasView(View):
     """区域信息"""
 
     def get(self, request):
@@ -40,7 +40,7 @@ class Areas(View):
         return http.JsonResponse({'errno': RET.OK, 'errmsg': 'ok', 'data': data})
 
 
-class NewHouse(VerifyRequiredJSONMixin, View):
+class NewHouseView(VerifyRequiredJSONMixin, View):
     """发布新房源"""
 
     def post(self, request):
@@ -111,7 +111,7 @@ class NewHouse(VerifyRequiredJSONMixin, View):
         return http.JsonResponse({'errno': RET.OK, 'errmsg': "Ok", 'data': {"house_id": house.id}})
 
 
-class HouseImage(VerifyRequiredJSONMixin, View):
+class HouseImageView(VerifyRequiredJSONMixin, View):
     """房屋图片"""
 
     def post(self, request, house_id):
@@ -170,3 +170,5 @@ class HouseImage(VerifyRequiredJSONMixin, View):
             return http.JsonResponse({'errno': RET.DBERR, 'errmsg': "上传失败"})
 
         return http.JsonResponse({'errno': RET.OK, 'errmsg': "OK", 'data': {"url": url}})
+
+

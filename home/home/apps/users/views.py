@@ -15,7 +15,7 @@ from users.models import User
 logger = logging.getLogger('django')
 
 
-class Register(View):
+class RegisterView(View):
     """用户注册"""
 
     def post(self, request):
@@ -61,7 +61,7 @@ class Register(View):
         return http.JsonResponse({'errno': RET.OK, 'errmsg': "注册成功"})
 
 
-class Session(View):
+class SessionView(View):
     """用户状态查询"""
 
     def get(self, request):
@@ -75,7 +75,7 @@ class Session(View):
         return http.JsonResponse({'errno': RET.SESSIONERR, 'errmsg': '用户未登录'})
 
 
-class Logout(LoginRequiredJSONMixin, View):
+class LogoutView(LoginRequiredJSONMixin, View):
     """用户退出"""
 
     def delete(self, request):
@@ -85,7 +85,7 @@ class Logout(LoginRequiredJSONMixin, View):
         return http.JsonResponse({'errno': RET.OK, 'errmsg': "用户已退出"})
 
 
-class Login(View):
+class LoginView(View):
 
     def post(self, request):
         # 1. 获取参数和判断是否有值
@@ -115,7 +115,7 @@ class Login(View):
         return http.JsonResponse({'errno': RET.OK, 'errmsg': "登录成功"})
 
 
-class UserAvatar(LoginRequiredJSONMixin, View):
+class UserAvatarView(LoginRequiredJSONMixin, View):
     '''
             {
             "data": {
@@ -165,7 +165,7 @@ class UserAvatar(LoginRequiredJSONMixin, View):
         return http.JsonResponse({'errno': RET.OK, 'errmsg': "OK", 'data': {"avatar_url": url}})
 
 
-class AuthProfile(LoginRequiredJSONMixin, View):
+class AuthProfileView(LoginRequiredJSONMixin, View):
     """用户实名认证"""
     def get(self, request):
         # 1. 取到当前登录用户
@@ -200,7 +200,7 @@ class AuthProfile(LoginRequiredJSONMixin, View):
         return http.JsonResponse({'errno': RET.OK, 'errmsg': "OK"})
 
 
-class UserHouse(LoginRequiredJSONMixin, View):
+class UserHouseView(LoginRequiredJSONMixin, View):
     '''用户房屋信息'''
 
     def get(self, request):
