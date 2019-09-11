@@ -7,9 +7,10 @@ from django_redis import get_redis_connection
 import logging
 from redis import StrictRedis
 from home.utils.common import LoginRequiredJSONMixin, VerifyRequiredJSONMixin
+from home.utils.qiniuyun import qiniuyun
 from home.utils.response_code import RET
 from users.models import User
-from fdfs_client.client import Fdfs_client
+# from fdfs_client.client import Fdfs_client
 
 logger = logging.getLogger('django')
 
@@ -135,7 +136,8 @@ class UserAvatar(LoginRequiredJSONMixin, View):
             """
 
         # 1. 获取到上传的文件
-        content = request.FILES.get('avatar')
+        content = request.FILES.get('avatar').read()
+        file_name = request.FILES.get('avatar').name
         if content is None:
             return http.JsonResponse({'errno': RET.PARAMERR, 'errmsg': "参数错误"})
 
@@ -143,20 +145,21 @@ class UserAvatar(LoginRequiredJSONMixin, View):
         # 创建客户端对象
         # 调用上传函数
         try:
-            client = Fdfs_client(settings.FDFS_CLIENT_CONF)
-            result = client.upload_by_buffer(content.read())
+            # client = Fdfs_client(settings.FDFS_CLIENT_CONF)
+            # result = client.upload_by_buffer(content.read())
+            # # 上传成功：返回file_id,拼接图片访问URL
+            # file_id = result.get('Remote file_id')
+            # url = settings.FDFS_URL + file_id
+
+            url = qiniuyun(content, file_name)
+
+            # 3. 将头像信息保存到用户模型
+            user = request.user
+            user.avatar_url = url
+            user.save()
         except Exception as e:
             logger.error(e)
             return http.JsonResponse({'errno': RET.THIRDERR, 'errmsg': "上传图片错误"})
-
-        # 上传成功：返回file_id,拼接图片访问URL
-        file_id = result.get('Remote file_id')
-        url = settings.FDFS_URL + file_id
-
-        # 3. 将头像信息保存到用户模型
-        user = request.user
-        user.avatar_url = url
-        user.save()
 
         # 4. 返回上传的结果<avatar_url>
         return http.JsonResponse({'errno': RET.OK, 'errmsg': "OK", 'data': {"avatar_url": url}})

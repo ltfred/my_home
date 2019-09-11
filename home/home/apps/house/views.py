@@ -1,5 +1,5 @@
 import json
-from fdfs_client.client import Fdfs_client
+# from fdfs_client.client import Fdfs_client
 from django import http
 from django.conf import settings
 from django.core.cache import cache
@@ -7,6 +7,7 @@ from django.views import View
 from address.models import Area
 import logging
 from home.utils.common import VerifyRequiredJSONMixin
+from home.utils.qiniuyun import qiniuyun
 from home.utils.response_code import RET
 from house.models import Facility, House
 
@@ -126,29 +127,46 @@ class HouseImage(VerifyRequiredJSONMixin, View):
             logger.error(e)
             return http.JsonResponse({'error': RET.PARAMERR, 'errmsg': '房屋不存在'})
 
-        # 上传到Fdfs
+        # # 上传到Fdfs
+        # try:
+        #     client = Fdfs_client(settings.FDFS_CLIENT_CONF)
+        #     result = client.upload_by_buffer(house_image.read())
+        # except Exception as e:
+        #     logger.error(e)
+        #     return http.JsonResponse({'errno': RET.THIRDERR, 'errmsg': "上传图片错误"})
+        #
+        # # 初始化房屋的图片模型
+        # # 上传成功：返回file_id,拼接图片访问URL
+        # file_id = result.get('Remote file_id')
+        # url = settings.FDFS_URL + file_id
+        # try:
+        #     house_image = HouseImage.objects.create(house=house, url=url)
+        # except Exception as e:
+        #     logger.error(e)
+        #     return http.JsonResponse({'errno': RET.DBERR, 'errmsg': "保存数据失败"})
+        #
+        # # 判断是否有首页图片
+        # if not house.index_image_url:
+        #     # 保存图片地址
+        #     house.index_image_url = url
+        #     house.save()
 
+        # 上传到七牛云
         try:
-            client = Fdfs_client(settings.FDFS_CLIENT_CONF)
-            result = client.upload_by_buffer(house_image.read())
+            content = house_image.read()
+            file_name = request.FILES.get('house_image').name
+            url = qiniuyun(content, file_name)
+            # 保存图片
+            HouseImage.objects.create(
+                house=house,
+                url=url
+            )
+            # 如果房子主图片没有，将第一张图片设置为房子主图片
+            if not house.index_image_url:
+                house.index_image_url = url
+                house.save()
         except Exception as e:
             logger.error(e)
-            return http.JsonResponse({'errno': RET.THIRDERR, 'errmsg': "上传图片错误"})
-
-        # 初始化房屋的图片模型
-        # 上传成功：返回file_id,拼接图片访问URL
-        file_id = result.get('Remote file_id')
-        url = settings.FDFS_URL + file_id
-        try:
-            house_image = HouseImage.objects.create(house=house, url=url)
-        except Exception as e:
-            logger.error(e)
-            return http.JsonResponse({'errno': RET.DBERR, 'errmsg': "保存数据失败"})
-
-        # 判断是否有首页图片
-        if not house.index_image_url:
-            # 保存图片地址
-            house.index_image_url = url
-            house.save()
+            return http.JsonResponse({'errno': RET.DBERR, 'errmsg': "上传失败"})
 
         return http.JsonResponse({'errno': RET.OK, 'errmsg': "OK", 'data': {"url": url}})
