@@ -1,15 +1,21 @@
 import json
 # from fdfs_client.client import Fdfs_client
+from datetime import datetime
+
 from django import http
 from django.conf import settings
 from django.core.cache import cache
+from django.core.paginator import Paginator
 from django.views import View
 from address.models import Area
 import logging
+
+from home.utils import constants
 from home.utils.common import VerifyRequiredJSONMixin
 from home.utils.qiniuyun import qiniuyun
 from home.utils.response_code import RET
 from house.models import Facility, House, HouseImage
+from order.models import Order
 
 logger = logging.getLogger('django')
 
@@ -276,3 +282,146 @@ class HouseDetailView(View):
         # 返回
         return http.JsonResponse({'data': data, 'errmsg': 'ok', 'errno': RET.OK})
 
+
+class IndexHouseView(View):
+    """首页房源推荐"""
+
+    def get(self, request):
+        # 判断缓存是否存在
+        data = cache.get('index')
+
+        # 缓存不存在，进行查询
+        if not data:
+            try:
+                # 获取订单量前5的房源
+                houses = House.objects.order_by('-order_count')[0:5]
+            except Exception as e:
+                logger.error(e)
+                return http.JsonResponse({'errno': RET.DBERR, 'errmsg': "数据库查询错误"})
+
+            # 整理格式
+            data = []
+            for house in houses:
+                data.append({
+                    'house_id': house.id,
+                    'img_url': house.index_image_url
+                })
+
+            # 设置缓存
+            cache.set('index', data, 3600)
+        # 返回
+        return http.JsonResponse({'data': data, 'errmsg': 'ok', 'errno': RET.OK})
+
+
+class IndexSearch(View):
+    """首页房源搜索"""
+
+    def get(self, request):
+        # 获取参数
+        area_id = request.GET.get('aid')
+        start_date = request.GET.get('sd')
+        end_date = request.GET.get('ed')
+        sort_kind = request.GET.get('sk')
+        page_num = request.GET.get('p', 1)
+
+        # 如果传量区域id，进行检验
+        if area_id:
+            try:
+                Area.objects.get(id=area_id)
+            except Exception as e:
+                logger.error(e)
+                return http.JsonResponse({'errno': RET.PARAMERR, 'errmsg': "区域参数错误"})
+
+        # 如果传了时间对其检验
+        try:
+            if start_date:
+                start_date = datetime.strptime(start_date, "%Y-%m-%d")
+            if end_date:
+                end_date = datetime.strptime(end_date, "%Y-%m-%d")
+            # 两个都存在，判断结束日期是否大于开始日期
+            if start_date and end_date:
+                # 假设结束时间大于开始时间，不满足就会报错
+                assert end_date >= start_date
+        except Exception as e:
+            logger.error(e)
+            return http.JsonResponse({'errno': RET.PARAMERR, 'errmsg': "日期参数错误"})
+
+        # 页数检验
+        try:
+            page_num = int(page_num)
+        except Exception as e:
+            logger.error(e)
+            return http.JsonResponse({'errno': RET.PARAMERR, 'errmsg': "页数参数错误"})
+        # 查询是否存在缓存，没有在进行查询
+        # house_query_set = cache.get('search_%s_%s-%s_%s' % (area_id, start_date, end_date, sort_kind))
+        # if house_query_set:
+        # 先查出所有的房源
+        house_query = House.objects.all()
+        # 定义容器存放冲突订单对象
+        conflict_orders = None
+        try:
+            if start_date and end_date:
+                # 查询冲突的订单所有对象
+                conflict_orders = Order.objects.filter(begin_date__lte=end_date, end_date__gte=start_date)
+            elif start_date:
+                # 用户只选择入住日期
+                conflict_orders = Order.objects.filter(end_date__gte=start_date)
+            elif end_date:
+                # 只选择离开时间
+                conflict_orders = Order.objects.filter(begin_date__lte=end_date)
+        except Exception as e:
+            logger.error(e)
+            return http.JsonResponse({'errno': RET.DBERR, 'errmsg': "数据库查询错误"})
+
+        if conflict_orders:
+            # 从订单中获取冲突的房屋id
+            conflict_house_ids = [order.house.id for order in conflict_orders]
+
+            # 如果存在
+            if conflict_house_ids:
+                # 如果冲突的房屋id不为空，将这些id的房屋移除
+                # 获得所有的房屋id
+                house_query = House.objects.exclude(id__in=conflict_house_ids)
+
+        if area_id:
+            """添加条件"""
+            house_query = house_query.filter(area_id__in=area_id)
+
+        if sort_kind == 'booking':
+            # 按订单量排序
+            house_query_set = house_query.order_by('order_count')
+        elif sort_kind == 'price-inc':
+            # 按价格升序
+            house_query_set = house_query.order_by('price')
+        elif sort_kind == 'price-des':
+            # 按价格降序
+            house_query_set = house_query.order_by('-price')
+        else:
+            # 如果用户什么都没选择，则按照数据库字段创建时间
+            house_query_set = house_query.order_by('-create_time')
+        # 设施缓存
+        # cache.set('search_%s_%s-%s_%s' % (area_id, start_date, end_date, sort_kind), house_query_set, 3600)
+        # 分页
+        paginator = Paginator(house_query_set, constants.PAGE_COUNT)
+        houses_page = paginator.page(page_num)
+        total_page = paginator.num_pages
+
+        house_list = []
+        for house in houses_page:
+            house_list.append({
+                'address': house.address,
+                'area_name': house.area.name,
+                'ctime': house.create_time.strftime('%Y-%m-%d'),
+                'house_id': house.id,
+                'img_url': house.index_image_url,
+                'order_count': house.order_count,
+                'price': house.price,
+                'room_count': house.room_count,
+                'title': house.title,
+                'user_avatar': house.user.avatar_url if house.user.avatar_url else ''
+
+            })
+
+        data = {'houses': house_list, 'total_page': total_page}
+
+        return http.JsonResponse({'data': data, 'errmsg': 'ok', 'errno': RET.OK})
