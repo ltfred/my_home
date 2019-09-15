@@ -20,7 +20,6 @@ from order.models import Order
 logger = logging.getLogger('django')
 
 
-
 class NewHouseView(VerifyRequiredJSONMixin, View):
     """发布新房源"""
 
