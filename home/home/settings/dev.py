@@ -84,7 +84,7 @@ DATABASES = {
         'PORT': 3306,  # 数据库端口
         'USER': 'root',  # 数据库用户名
         'PASSWORD': 'mysql123',  # 数据库用户密码
-        'NAME': 'ihome'  # 数据库名字
+        'NAME': 'home'  # 数据库名字
     },
 }
 
