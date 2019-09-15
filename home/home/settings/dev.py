@@ -199,3 +199,9 @@ LOGGING = {
         },
     }
 }
+
+# # FDFS客户端的配置文件
+# FDFS_CLIENT_CONF = os.path.join(BASE_DIR, 'utils/fastdfs/client.conf')
+#
+# # 访问FDFS中存储的文件时,地址有可能变化, 所以我们把地址放在这里记录:
+# FDFS_URL = 'http://10.211.55.5:8888/'
