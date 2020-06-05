@@ -2,7 +2,7 @@ certifi==2019.3.9
 chardet==3.0.4
 cos-python-sdk-v5==1.6.8
 dicttoxml==1.7.4
-Django==1.11.11
+Django==1.11.29
 django-redis==4.10.0
 idna==2.8
 Pillow==6.0.0
